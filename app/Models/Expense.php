@@ -10,5 +10,16 @@ class Expense extends Model
         'description',
         'amount',
         'category',
+        "user_id",
     ];
+
+
+    protected static function booted()
+    {
+        static::creating(function (Expense $expense) {
+            if (auth()->check() && is_null($expense->user_id)) {
+                $expense->user_id = auth()->id();
+            }
+        });
+    }
 }
